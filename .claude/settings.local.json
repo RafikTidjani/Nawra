@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx next info:*)",
+      "Bash(unzip:*)",
+      "Bash(npx tsc:*)",
+      "Bash(where ffmpeg)",
+      "Bash(ffmpeg -i \"/c/Users/User/Nawra/nawra-project/public/videos/bouquet/bouquet-doree.mp4\" -ss 00:00:01 -vframes 1 -q:v 2 \"/c/Users/User/Nawra/nawra-project/public/images/bouquet-doree-poster.jpg\" -y)",
+      "Bash(timeout 15 npx next dev --turbopack)",
+      "Bash(test -f \"c:/Users/User/Nawra/nawra-project/supabase/schema.sql\")"
+    ]
+  }
+}
