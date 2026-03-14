@@ -11,6 +11,11 @@ interface OrderItem {
   product_image: string | null;
   quantity: number;
   total: number;
+  // Supplier info (enriched by API)
+  supplier_name?: string | null;
+  supplier_code?: string | null;
+  supplier_product_id?: string | null;
+  cost_price?: number | null;
 }
 
 interface Order {
@@ -311,7 +316,7 @@ export default function TabOrders() {
                         </h4>
                         <div className="space-y-3">
                           {order.order_items.map((item) => (
-                            <div key={item.id} className="flex items-center gap-3">
+                            <div key={item.id} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-primary/5">
                               {item.product_image && (
                                 <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-accent flex-shrink-0">
                                   <Image
@@ -331,7 +336,31 @@ export default function TabOrders() {
                                   {item.quantity} × {item.product_price}€
                                 </p>
                               </div>
-                              <span className="font-heading text-primary">
+
+                              {/* Supplier info */}
+                              {item.supplier_name ? (
+                                <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                                  <span className="px-2 py-1 text-xs font-body bg-blue-50 text-blue-600 rounded border border-blue-200">
+                                    {item.supplier_name}
+                                  </span>
+                                  {item.supplier_product_id && (
+                                    <span className="text-xs font-mono text-primary/40">
+                                      Réf: {item.supplier_product_id}
+                                    </span>
+                                  )}
+                                  {item.cost_price && (
+                                    <span className="text-xs text-emerald-600">
+                                      Coût: {item.cost_price}€
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="px-2 py-1 text-xs font-body bg-gray-50 text-gray-500 rounded border border-gray-200">
+                                  Manuel
+                                </span>
+                              )}
+
+                              <span className="font-heading text-primary ml-2">
                                 {item.total.toFixed(2)}€
                               </span>
                             </div>
