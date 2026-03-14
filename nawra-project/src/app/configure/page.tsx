@@ -1,7 +1,7 @@
 // src/app/configure/page.tsx
 import { supabase } from '@/lib/supabase';
 import { DEFAULT_THEMES, DEFAULT_SIZES, DEFAULT_PRODUCTS } from '@/lib/data';
-import type { Theme, Size, Product, ProductType } from '@/types';
+import type { Theme, Size, LegacyProduct, ProductType } from '@/types';
 import ConfiguratorClient from './ConfiguratorClient';
 
 async function getThemes(): Promise<Record<string, Theme>> {
@@ -50,7 +50,7 @@ async function getSizes(): Promise<Size[]> {
   }
 }
 
-async function getProducts(): Promise<Product[]> {
+async function getProducts(): Promise<LegacyProduct[]> {
   if (!supabase) return DEFAULT_PRODUCTS;
   try {
     const { data, error } = await supabase.from('products').select('*');

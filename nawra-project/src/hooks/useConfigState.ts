@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { ConfigState, ProductType } from '@/types';
 
-const STORAGE_KEY = 'nawra-config';
+const STORAGE_KEY = 'velora-config';
 
 const initialState: ConfigState = {
   productType: 'panier',

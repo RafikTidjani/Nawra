@@ -41,7 +41,7 @@ export default function BasketCatalogue({ baskets, themes }: BasketCatalogueProp
           {baskets.map((basket, index) => {
             const theme = themes[basket.theme];
             const bgColor = theme?.l || '#FAF3E8';
-            const primaryColor = theme?.p || '#C9921A';
+            const primaryColor = theme?.p || '#C9A84C';
 
             return (
               <div

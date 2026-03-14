@@ -1,46 +1,45 @@
 // src/app/layout.tsx
 import type { Metadata } from 'next';
-import { Amiri, Cormorant_Garamond } from 'next/font/google';
+import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
 import './globals.css';
 import WhatsAppButton from '@/components/WhatsAppButton';
 
-const amiri = Amiri({
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
-  subsets: ['latin', 'arabic'],
-  variable: '--font-amiri',
-  display: 'swap',
-});
-
 const cormorant = Cormorant_Garamond({
-  weight: ['300', '400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
   subsets: ['latin'],
   variable: '--font-cormorant',
   display: 'swap',
 });
 
+const dmSans = DM_Sans({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Nawra — Corbeilles de fiançailles sur mesure',
-  description: 'Composez votre corbeille de fiançailles unique avec les plus grandes marques. Livraison Paris & Île-de-France.',
-  keywords: ['corbeille fiançailles', 'corbeille mariage', 'cadeaux fiançailles', 'personnalisé', 'Paris'],
+  title: 'VELORA — Coiffeuses premium à prix accessible | Livraison France',
+  description: 'Découvrez nos coiffeuses élégantes livrées en France à partir de 159€. Qualité premium, livraison offerte, retours 30 jours.',
+  keywords: ['coiffeuse', 'meuble beauté', 'vanity', 'miroir LED', 'chambre', 'France'],
   openGraph: {
-    title: 'Nawra — Corbeilles de fiançailles sur mesure',
-    description: 'Composez votre corbeille unique avec Dior, Chanel, YSL...',
-    url: 'https://nawra.fr',
-    siteName: 'Nawra',
+    title: 'VELORA — Coiffeuses premium à prix accessible',
+    description: 'Découvrez nos coiffeuses élégantes livrées en France à partir de 159€. Qualité premium, livraison offerte, retours 30 jours.',
+    url: 'https://velorabeauty.fr',
+    siteName: 'VELORA',
     locale: 'fr_FR',
     type: 'website',
+    images: [{ url: '/og-image.jpg' }],
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${amiri.variable} ${cormorant.variable}`} suppressHydrationWarning>
-      <body className="font-cormorant bg-cream text-dark antialiased" suppressHydrationWarning>
+    <html lang="fr" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
+      <body className="font-body bg-background text-text antialiased" suppressHydrationWarning>
         {children}
         <WhatsAppButton />
-        <div className="grain-overlay" />
       </body>
     </html>
   );

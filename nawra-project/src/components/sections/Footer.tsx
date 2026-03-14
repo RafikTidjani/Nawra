@@ -89,7 +89,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href="mailto:contact@nawra.fr"
+                    href="mailto:contact@velorabeauty.fr"
                     className="flex items-center gap-3 text-cream/60 hover:text-gold transition-colors group"
                   >
                     <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
@@ -97,7 +97,7 @@ export default function Footer() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <span className="font-cormorant text-sm">contact@nawra.fr</span>
+                    <span className="font-cormorant text-sm">contact@velorabeauty.fr</span>
                   </a>
                 </li>
                 <li className="flex items-center gap-3 text-cream/40">
@@ -161,7 +161,7 @@ export default function Footer() {
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="font-cormorant text-cream/30 text-sm tracking-wide">
-                © {currentYear} Nawra. Tous droits réservés.
+                © {currentYear} VELORA. Tous droits réservés.
               </p>
 
               <div className="flex items-center gap-6">

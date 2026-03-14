@@ -2,13 +2,13 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import type { Product, ProductType } from '@/types';
+import type { LegacyProduct, ProductType } from '@/types';
 import { PRODUCT_TYPE_CONFIG } from '@/lib/data';
 
 type Category = 'all' | 'parfum' | 'makeup' | 'soin' | 'bijou' | 'fleur' | 'chocolat' | 'accessoire';
 
 interface StepProductsProps {
-  products: Product[];
+  products: LegacyProduct[];
   selectedTheme: string;
   selectedItems: string[];
   maxSlots: number;

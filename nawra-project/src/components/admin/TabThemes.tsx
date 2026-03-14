@@ -16,7 +16,7 @@ const PRODUCT_TYPE_LABELS: Record<string, string> = {
   cadeau: 'Cadeau',
 };
 
-const STORAGE_KEY = 'nawra-admin-auth';
+const STORAGE_KEY = 'velora-admin-auth';
 
 export default function TabThemes() {
   const [themes, setThemes] = useState<ThemeRow[]>([]);
@@ -133,10 +133,10 @@ export default function TabThemes() {
       id: tempId,
       name: 'Nouveau thème',
       product_type: 'panier',
-      p: '#8B1A2F',
-      s: '#C9404A',
-      a: '#C9921A',
-      l: '#fdf0f2',
+      p: '#1A1A1A',
+      s: '#C9A84C',
+      a: '#C9A84C',
+      l: '#F5F0E8',
     };
     setThemes([newTheme, ...themes]);
     setEditing(tempId);

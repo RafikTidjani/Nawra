@@ -19,7 +19,7 @@ export default function Badge({ children, color = 'gold' }: BadgeProps) {
     <span
       className={`
         inline-block px-2 py-0.5 text-xs font-cormorant tracking-wider uppercase
-        border rounded-nawra
+        border rounded-lg
         ${colorStyles[color]}
       `}
     >

@@ -26,7 +26,7 @@ const EXPERIENCES = [
     description: 'La tradition sublimée. Parfums, bijoux, maquillage des plus grandes marques pour célébrer vos fiançailles.',
     icon: '🎁',
     video: 'bouquet/bouquet-doree',
-    color: '#C9921A',
+    color: '#C9A84C',
     gradient: 'from-amber-500/80 to-yellow-600/80',
     features: ['Produits luxe', 'Personnalisable', 'Marques prestige'],
     price: 'À partir de 49€',
@@ -56,7 +56,7 @@ export default function ExperiencesSection() {
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #0D0608 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, #1A1A1A 1px, transparent 0)`,
           backgroundSize: '40px 40px',
         }} />
       </div>

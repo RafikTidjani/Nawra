@@ -16,7 +16,7 @@ interface BouquetOption {
   sort_order?: number;
 }
 
-const STORAGE_KEY = 'nawra-admin-auth';
+const STORAGE_KEY = 'velora-admin-auth';
 
 export default function TabBouquets() {
   const [bouquets, setBouquets] = useState<BouquetOption[]>([]);

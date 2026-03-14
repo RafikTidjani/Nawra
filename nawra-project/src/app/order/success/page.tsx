@@ -116,7 +116,7 @@ export default async function OrderSuccessPage({ searchParams }: PageProps) {
               <circle
                 cx="48" cy="48" r="44"
                 fill="none"
-                stroke="#C9921A"
+                stroke="#C9A84C"
                 strokeWidth="2.5"
                 className="animate-circle-grow"
                 strokeLinecap="round"
@@ -125,7 +125,7 @@ export default async function OrderSuccessPage({ searchParams }: PageProps) {
               <path
                 d="M30 48 L42 60 L66 36"
                 fill="none"
-                stroke="#C9921A"
+                stroke="#C9A84C"
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"

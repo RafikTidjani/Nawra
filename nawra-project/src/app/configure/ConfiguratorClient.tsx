@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import type { Theme, Size, Product, ProductType } from '@/types';
+import type { Theme, Size, LegacyProduct, ProductType } from '@/types';
 import { useConfigState } from '@/hooks/useConfigState';
 import { ARABESQUE_BG, getSlotsForSize, getThemesForType, getSizesForType, PRODUCT_TYPE_CONFIG, BOUQUET_OPTIONS } from '@/lib/data';
 import StepTheme from '@/components/configurator/StepTheme';
@@ -16,7 +16,7 @@ import Logo from '@/components/ui/Logo';
 interface ConfiguratorClientProps {
   themes: Record<string, Theme>;
   sizes: Size[];
-  products: Product[];
+  products: LegacyProduct[];
   initialTheme?: string;
   initialType?: ProductType;
   cancelled?: boolean;
@@ -65,7 +65,7 @@ export default function ConfiguratorClient({
     : null;
 
   const themeData = productType === 'bouquet' && bouquetOption
-    ? { name: bouquetOption.name, p: bouquetOption.color, s: bouquetOption.color, a: '#C9921A', l: bouquetOption.color + '15' }
+    ? { name: bouquetOption.name, p: bouquetOption.color, s: bouquetOption.color, a: '#C9A84C', l: bouquetOption.color + '15' }
     : theme ? (typeThemes[theme] || themes[theme]) : null;
   const sizeData = typeSizes.find(s => s.id === size) || null;
   const maxSlots = getSlotsForSize(typeSizes, size);
@@ -88,7 +88,7 @@ export default function ConfiguratorClient({
       {/* Header - Sticky */}
       <header
         className="sticky top-0 z-50 backdrop-blur-md border-b border-white/5"
-        style={{ backgroundImage: `${ARABESQUE_BG}, linear-gradient(to right, #0D0608, #1A0A00, #0D0608)` }}
+        style={{ backgroundImage: `${ARABESQUE_BG}, linear-gradient(to right, #1A1A1A, #1A1A1A, #1A1A1A)` }}
       >
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">

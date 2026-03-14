@@ -15,7 +15,7 @@ const PRODUCT_TYPE_LABELS: Record<string, string> = {
   cadeau: 'Cadeau',
 };
 
-const STORAGE_KEY = 'nawra-admin-auth';
+const STORAGE_KEY = 'velora-admin-auth';
 
 export default function TabSizes() {
   const [sizes, setSizes] = useState<SizeRow[]>([]);

@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: `Corbeille Nawra — Thème ${order.theme} (${order.size})`,
-              description: `${order.products.length} produits sélectionnés`,
+              name: `Commande VELORA`,
+              description: `${order.products.length} article(s)`,
               images: [`${appUrl}/images/og.jpg`],
             },
             unit_amount: order.total * 100, // Stripe en centimes
@@ -37,24 +37,42 @@ export async function POST(req: NextRequest) {
         },
       ],
       metadata: {
-        theme:    order.theme,
-        size:     order.size,
+        brand: 'VELORA',
         products: order.products.join(','),
         customerName:    order.customer.name,
         customerPhone:   order.customer.phone,
         customerAddress: `${order.customer.address}, ${order.customer.zip} ${order.customer.city}`,
-        deliveryDate:    order.deliveryDate || '',
         message:         order.customer.message || '',
       },
       success_url: `${appUrl}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `${appUrl}/configure?cancelled=1`,
+      cancel_url:  `${appUrl}/cart?cancelled=1`,
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 0,
+              currency: 'eur',
+            },
+            display_name: 'Livraison offerte',
+            delivery_estimate: {
+              minimum: {
+                unit: 'business_day',
+                value: 5,
+              },
+              maximum: {
+                unit: 'business_day',
+                value: 7,
+              },
+            },
+          },
+        },
+      ],
     });
 
     // 2. Sauvegarder en BDD avec status 'pending'
     if (supabaseAdmin) {
       await supabaseAdmin.from('orders').insert({
-        theme:           order.theme,
-        size:            order.size,
         products:        order.products,
         total:           order.total,
         customer_name:   order.customer.name,
@@ -64,7 +82,6 @@ export async function POST(req: NextRequest) {
         customer_city:   order.customer.city,
         customer_zip:    order.customer.zip,
         customer_message:order.customer.message || null,
-        delivery_date:   order.deliveryDate || null,
         status:          'pending',
         stripe_session_id: session.id,
       });

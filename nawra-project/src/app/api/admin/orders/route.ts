@@ -1,12 +1,12 @@
 // src/app/api/admin/orders/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { verifyAdmin } from '@/lib/admin-auth';
 
 export async function GET(req: NextRequest) {
-  const secret = req.headers.get('x-admin-secret');
-  const adminSecret = process.env.ADMIN_SECRET;
+  const admin = await verifyAdmin(req);
 
-  if (!adminSecret || secret !== adminSecret) {
+  if (!admin) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
@@ -17,7 +17,10 @@ export async function GET(req: NextRequest) {
   try {
     const { data, error } = await supabaseAdmin
       .from('orders')
-      .select('*')
+      .select(`
+        *,
+        order_items (*)
+      `)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -25,7 +28,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Erreur base de données' }, { status: 500 });
     }
 
-    return NextResponse.json({ orders: data });
+    return NextResponse.json({ orders: data || [] });
   } catch (err) {
     console.error('[admin/orders]', err);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
@@ -33,10 +36,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const secret = req.headers.get('x-admin-secret');
-  const adminSecret = process.env.ADMIN_SECRET;
+  const admin = await verifyAdmin(req);
 
-  if (!adminSecret || secret !== adminSecret) {
+  if (!admin) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
@@ -51,12 +53,27 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'Données manquantes' }, { status: 400 });
     }
 
+    // Mettre à jour le statut et les timestamps appropriés
+    const updates: Record<string, unknown> = {
+      status,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (status === 'paid') {
+      updates.paid_at = new Date().toISOString();
+    } else if (status === 'shipped') {
+      updates.shipped_at = new Date().toISOString();
+    } else if (status === 'delivered') {
+      updates.delivered_at = new Date().toISOString();
+    }
+
     const { error } = await supabaseAdmin
       .from('orders')
-      .update({ status, updated_at: new Date().toISOString() })
+      .update(updates)
       .eq('id', id);
 
     if (error) {
+      console.error('[admin/orders PATCH]', error);
       return NextResponse.json({ error: 'Erreur mise à jour' }, { status: 500 });
     }
 

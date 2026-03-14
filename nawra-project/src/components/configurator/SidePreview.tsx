@@ -1,7 +1,7 @@
 // src/components/configurator/SidePreview.tsx
 'use client';
 
-import type { Theme, Size, Product, ProductType } from '@/types';
+import type { Theme, Size, LegacyProduct, ProductType } from '@/types';
 import { PRODUCT_TYPE_CONFIG, BOUQUET_OPTIONS } from '@/lib/data';
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -20,7 +20,7 @@ interface SidePreviewProps {
   size: string;
   sizeData: Size | null;
   selectedItems: string[];
-  products: Product[];
+  products: LegacyProduct[];
   productType?: ProductType;
 }
 
@@ -94,7 +94,7 @@ export default function SidePreview({
             )}
             <div
               className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-10 blur-xl"
-              style={{ backgroundColor: themeData?.s || '#C9921A' }}
+              style={{ backgroundColor: themeData?.s || '#C9A84C' }}
             />
 
             <div className="relative">
@@ -109,8 +109,8 @@ export default function SidePreview({
                       <span
                         className="w-2.5 h-2.5 rounded-full shadow-sm"
                         style={{
-                          backgroundColor: themeData?.p || '#C9921A',
-                          boxShadow: `0 0 6px ${themeData?.p || '#C9921A'}40`,
+                          backgroundColor: themeData?.p || '#C9A84C',
+                          boxShadow: `0 0 6px ${themeData?.p || '#C9A84C'}40`,
                         }}
                       />
                       Thème {theme}
@@ -158,7 +158,7 @@ export default function SidePreview({
                       key={i}
                       className="w-2.5 h-2.5 rounded-full transition-all duration-300"
                       style={i < selectedItems.length ? {
-                        backgroundColor: '#C9921A',
+                        backgroundColor: '#C9A84C',
                         boxShadow: '0 0 6px rgba(201, 146, 26, 0.4)',
                       } : {
                         backgroundColor: 'rgba(250, 243, 232, 0.1)',

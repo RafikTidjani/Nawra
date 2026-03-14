@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { DEFAULT_BASKETS, DEFAULT_THEMES } from '@/lib/data';
 import type { Basket, Theme } from '@/types';
 
-const STORAGE_KEY = 'nawra-admin-auth';
+const STORAGE_KEY = 'velora-admin-auth';
 
 export default function TabBaskets() {
   const [baskets, setBaskets] = useState<Basket[]>([]);
@@ -256,7 +256,7 @@ export default function TabBaskets() {
                   <p className="font-cormorant text-dark/40 text-sm flex items-center gap-2">
                     <span
                       className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: themes[basket.theme]?.p || '#C9921A' }}
+                      style={{ backgroundColor: themes[basket.theme]?.p || '#C9A84C' }}
                     />
                     {basket.theme} · Taille {basket.size}
                     {basket.tag && (

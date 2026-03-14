@@ -1,98 +1,48 @@
 // src/app/page.tsx
 import { supabase } from '@/lib/supabase';
-import { DEFAULT_THEMES, DEFAULT_BASKETS } from '@/lib/data';
-import type { Theme, Basket } from '@/types';
+import { PRODUCTS } from '@/lib/data';
+import type { Product } from '@/types';
 
 import Navbar from '@/components/sections/Navbar';
 import Hero from '@/components/sections/Hero';
-import ExperiencesSection from '@/components/sections/ExperiencesSection';
-import BouquetShowcase from '@/components/sections/BouquetShowcase';
-import PanierShowcase from '@/components/sections/PanierShowcase';
-import CadeauShowcase from '@/components/sections/CadeauShowcase';
-import BasketCatalogue from '@/components/sections/BasketCatalogue';
-import VideoSection from '@/components/sections/VideoSection';
-import Testimonials from '@/components/sections/Testimonials';
-import SplitEmail from '@/components/sections/SplitEmail';
-import FaqSection from '@/components/sections/FaqSection';
-import Footer from '@/components/sections/Footer';
+import BrandPromise from '@/components/sections/BrandPromise';
+import Bestsellers from '@/components/sections/Bestsellers';
+import UniversSection from '@/components/sections/UniversSection';
+import ReviewsSection from '@/components/sections/ReviewsSection';
+import FooterVelora from '@/components/sections/FooterVelora';
 
-async function getThemes(): Promise<Record<string, Theme>> {
+async function getProducts(): Promise<Product[]> {
+  if (!supabase) return PRODUCTS;
+
   try {
-    if (!supabase) return DEFAULT_THEMES;
-
     const { data, error } = await supabase
-      .from('themes')
-      .select('*');
-
-    if (error || !data?.length) {
-      return DEFAULT_THEMES;
-    }
-
-    const themes: Record<string, Theme> = {};
-    data.forEach((t) => {
-      themes[t.name] = {
-        id: t.id,
-        name: t.name,
-        p: t.primary_color,
-        s: t.secondary_color,
-        a: t.accent_color,
-        l: t.light_color,
-      };
-    });
-    return themes;
-  } catch {
-    return DEFAULT_THEMES;
-  }
-}
-
-async function getBaskets(): Promise<Basket[]> {
-  try {
-    if (!supabase) return DEFAULT_BASKETS;
-
-    const { data, error } = await supabase
-      .from('baskets')
+      .from('products')
       .select('*')
-      .limit(4);
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
 
     if (error || !data?.length) {
-      return DEFAULT_BASKETS;
+      return PRODUCTS;
     }
 
-    return data.map((b) => ({
-      id: b.id,
-      name: b.name,
-      theme: b.theme,
-      size: b.size,
-      price: b.price,
-      tag: b.tag,
-      products: b.products || [],
-      img: b.img,
-    }));
+    return data as Product[];
   } catch {
-    return DEFAULT_BASKETS;
+    return PRODUCTS;
   }
 }
 
 export default async function HomePage() {
-  const [themes, baskets] = await Promise.all([
-    getThemes(),
-    getBaskets(),
-  ]);
+  const products = await getProducts();
 
   return (
     <main className="overflow-x-hidden">
       <Navbar />
       <Hero />
-      <ExperiencesSection />
-      <BouquetShowcase />
-      <PanierShowcase />
-      <CadeauShowcase />
-      <BasketCatalogue baskets={baskets} themes={themes} />
-      <VideoSection />
-      <Testimonials />
-      <SplitEmail />
-      <FaqSection />
-      <Footer />
+      <BrandPromise />
+      <Bestsellers products={products} />
+      <UniversSection />
+      <ReviewsSection />
+      <FooterVelora />
     </main>
   );
 }

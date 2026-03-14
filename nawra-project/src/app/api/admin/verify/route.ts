@@ -1,21 +1,43 @@
 // src/app/api/admin/verify/route.ts
+// Vérifie si l'admin est connecté (via cookie JWT)
+
 import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export async function POST(req: NextRequest) {
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'velora-admin-secret-key-change-in-production'
+);
+
+export async function GET(req: NextRequest) {
   try {
-    const { password } = await req.json();
-    const adminSecret = process.env.ADMIN_SECRET;
+    const token = req.cookies.get('velora-admin-token')?.value;
 
-    if (!adminSecret) {
-      return NextResponse.json({ error: 'Admin non configuré' }, { status: 500 });
+    if (!token) {
+      return NextResponse.json(
+        { authenticated: false, error: 'Non connecté' },
+        { status: 401 }
+      );
     }
 
-    if (password === adminSecret) {
-      return NextResponse.json({ success: true });
-    }
+    const { payload } = await jwtVerify(token, JWT_SECRET);
 
-    return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 });
+    return NextResponse.json({
+      authenticated: true,
+      admin: {
+        id: payload.adminId,
+        email: payload.email,
+        name: payload.name,
+      },
+    });
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return NextResponse.json(
+      { authenticated: false, error: 'Session expirée' },
+      { status: 401 }
+    );
   }
+}
+
+// Garde l'ancienne méthode POST pour compatibilité temporaire
+export async function POST(req: NextRequest) {
+  return GET(req);
 }

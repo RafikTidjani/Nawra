@@ -41,7 +41,7 @@ const TESTIMONIALS = [
     location: 'Vincennes',
     avatar: 'N',
     rating: 5,
-    text: 'Troisième commande chez Nawra pour des fiançailles dans ma famille. Toujours le même niveau d\'excellence. Merci !',
+    text: 'Troisième commande chez VELORA pour ma famille. Toujours le même niveau d\'excellence. Merci !',
     theme: 'Bordeaux',
     date: 'Il y a 2 semaines',
   },

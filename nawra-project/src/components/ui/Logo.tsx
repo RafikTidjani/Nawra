@@ -1,16 +1,10 @@
 // src/components/ui/Logo.tsx
-import { Playfair_Display, Amiri } from 'next/font/google';
+import { Cormorant_Garamond } from 'next/font/google';
 
-const playfair = Playfair_Display({
-  weight: '400',
-  style: 'italic',
+const cormorant = Cormorant_Garamond({
+  weight: ['600'],
+  style: ['normal'],
   subsets: ['latin'],
-  display: 'swap',
-});
-
-const amiri = Amiri({
-  weight: '400',
-  subsets: ['arabic'],
   display: 'swap',
 });
 
@@ -18,62 +12,56 @@ type LogoSize = 'sm' | 'md' | 'lg';
 
 interface LogoProps {
   size?: LogoSize;
+  variant?: 'light' | 'dark';
 }
 
-const SIZES: Record<LogoSize, { fontSize: number; gap: number }> = {
-  sm: { fontSize: 36, gap: 5 },
-  md: { fontSize: 56, gap: 8 },
-  lg: { fontSize: 110, gap: 12 },
+const SIZES: Record<LogoSize, { fontSize: number; letterSpacing: string }> = {
+  sm: { fontSize: 20, letterSpacing: '0.2em' },
+  md: { fontSize: 28, letterSpacing: '0.25em' },
+  lg: { fontSize: 48, letterSpacing: '0.3em' },
 };
 
-export default function Logo({ size = 'md' }: LogoProps) {
-  const { fontSize, gap } = SIZES[size];
+export default function Logo({ size = 'md', variant = 'dark' }: LogoProps) {
+  const { fontSize, letterSpacing } = SIZES[size];
+  const color = variant === 'light' ? '#FAFAF8' : '#1A1A1A';
 
   return (
-    <div
-      className="flex items-baseline select-none"
-      style={{ gap: `${gap}px` }}
+    <span
+      className={cormorant.className}
+      style={{
+        fontSize: `${fontSize}px`,
+        color,
+        lineHeight: 1,
+        letterSpacing,
+        fontWeight: 600,
+      }}
     >
-      <span
-        className={playfair.className}
-        style={{ fontSize: `${fontSize}px`, color: '#FAF3E8', lineHeight: 1 }}
-      >
-        la
-      </span>
-      <span
-        className={`${amiri.className} shimmer-gold`}
-        style={{ fontSize: `${fontSize}px`, lineHeight: 1 }}
-      >
-        ع
-      </span>
-      <span
-        className={playfair.className}
-        style={{ fontSize: `${fontSize}px`, color: '#FAF3E8', lineHeight: 1 }}
-      >
-        rosa
-      </span>
-      <span
-        className={`${amiri.className} shimmer-gold`}
-        style={{ fontSize: `${fontSize}px`, lineHeight: 1 }}
-      >
-        ة
-      </span>
-    </div>
+      VELORA
+    </span>
   );
 }
 
-// LogoMark - Just the ع for favicon/icon
+// LogoMark - Just the V for favicon/icon
 interface LogoMarkProps {
   size?: number;
+  variant?: 'light' | 'dark';
 }
 
-export function LogoMark({ size = 32 }: LogoMarkProps) {
+export function LogoMark({ size = 32, variant = 'dark' }: LogoMarkProps) {
+  const color = variant === 'light' ? '#FAFAF8' : '#1A1A1A';
+
   return (
     <span
-      className={`${amiri.className} shimmer-gold`}
-      style={{ fontSize: `${size}px`, lineHeight: 1, display: 'inline-block' }}
+      className={cormorant.className}
+      style={{
+        fontSize: `${size}px`,
+        color,
+        lineHeight: 1,
+        fontWeight: 600,
+        display: 'inline-block',
+      }}
     >
-      ع
+      V
     </span>
   );
 }

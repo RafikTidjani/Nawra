@@ -1,7 +1,8 @@
-# Nawra — نـوّرة
+# VELORA
 
-Site e-commerce de corbeilles de fiançailles personnalisées.
-Marché : familles franco-maghrébines en France,suisse,allemagne.
+Site e-commerce de coiffeuses premium pour femmes 18-30 ans.
+Marché : France métropolitaine.
+Concept : "Le Princess Room accessible" — univers luxe, prix 2x moins chers (150€–250€)
 
 ---
 
@@ -20,13 +21,20 @@ Marché : familles franco-maghrébines en France,suisse,allemagne.
 ## Structure du projet
 
 ```
-nawra/
+velora/
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   │   ├── page.tsx            # Home page
 │   │   ├── layout.tsx          # Root layout (fonts, metadata)
+│   │   ├── collections/
+│   │   │   └── page.tsx        # Catalogue produits
+│   │   ├── products/
+│   │   │   └── [slug]/
+│   │   │       └── page.tsx    # Page produit dynamique
+│   │   ├── cart/
+│   │   │   └── page.tsx        # Page panier
 │   │   ├── configure/
-│   │   │   └── page.tsx        # Configurateur 3 steps
+│   │   │   └── page.tsx        # Configurateur packs
 │   │   ├── admin/
 │   │   │   └── page.tsx        # Panel admin
 │   │   └── api/
@@ -36,46 +44,39 @@ nawra/
 │   │
 │   ├── components/
 │   │   ├── ui/                 # Composants atomiques réutilisables
-│   │   │   ├── Button.tsx
-│   │   │   ├── Input.tsx
-│   │   │   └── Badge.tsx
+│   │   │   ├── Logo.tsx
+│   │   │   └── ...
 │   │   ├── sections/           # Sections de la home
 │   │   │   ├── Hero.tsx
-│   │   │   ├── ThemesGrid.tsx
-│   │   │   ├── BasketCatalogue.tsx
-│   │   │   ├── VideoSection.tsx
-│   │   │   ├── SplitEmail.tsx
-│   │   │   ├── FaqSection.tsx
-│   │   │   └── Footer.tsx
-│   │   ├── configurator/       # Composants du configurateur
-│   │   │   ├── StepTheme.tsx
-│   │   │   ├── StepProducts.tsx
-│   │   │   ├── StepSummary.tsx
-│   │   │   └── SidePreview.tsx
+│   │   │   ├── BrandPromise.tsx
+│   │   │   ├── Bestsellers.tsx
+│   │   │   ├── UniversSection.tsx
+│   │   │   ├── ReviewsSection.tsx
+│   │   │   ├── FooterVelora.tsx
+│   │   │   └── ...
+│   │   ├── ProductCard.tsx
+│   │   ├── ProductGallery.tsx
+│   │   ├── AddToCartButton.tsx
+│   │   ├── CartDrawer.tsx
 │   │   └── admin/              # Composants admin
-│   │       ├── TabBaskets.tsx
-│   │       ├── TabProducts.tsx
-│   │       ├── TabThemes.tsx
-│   │       └── TabSizes.tsx
 │   │
 │   ├── lib/
 │   │   ├── supabase.ts         # Client Supabase
 │   │   ├── stripe.ts           # Client Stripe
 │   │   ├── resend.ts           # Client Resend (emails)
-│   │   └── data.ts             # DEFAULT_THEMES, DEFAULT_PRODUCTS, etc.
+│   │   └── data.ts             # Products, videos, etc.
 │   │
 │   ├── types/
 │   │   └── index.ts            # Types TypeScript partagés
 │   │
 │   └── hooks/
-│       ├── useScrollY.ts
-│       └── useWindowWidth.ts
+│       ├── useCart.ts          # Hook panier (localStorage)
+│       └── ...
 │
 ├── public/
-│   ├── videos/                 # Vidéos 360° bouquets
-│   │   ├── bouquet-rose-gold.mp4
-│   │   ├── bouquet-doree.mp4     
-│   │   └── bouquet-emeraude.mp4
+│   ├── videos/
+│   │   ├── background/         # Vidéos hero
+│   │   └── products/           # Vidéos showcase produits
 │   └── images/
 │
 ├── CLAUDE.md                   # CE FICHIER — toujours lire en premier
@@ -91,23 +92,22 @@ nawra/
 
 ### Couleurs
 ```
---dark:      #0D0608    (background hero/sections dark)
---dark-2:    #1A0A00    (navbar admin, footer)
---cream:     #FAF3E8    (background principal clair)
---gold:      #C9921A    (accent principal)
---gold-light:#F5C842    (or clair, logo)
---bordeaux:  #8B1A2F    (CTA primary)
+--primary:        #1A1A1A    (texte, backgrounds dark)
+--secondary:      #C9A84C    (accent doré)
+--accent:         #F5F0E8    (fond clair sections)
+--background:     #FAFAF8    (fond principal)
+--text:           #1A1A1A    (texte principal)
+--text-secondary: #6B6B6B    (texte secondaire)
 ```
 
 ### Fonts (Google Fonts — déjà dans layout.tsx)
-- **Amiri** : titres, prix, logo arabe
-- **Cormorant Garamond** : body, nav, labels
+- **Cormorant Garamond** (400, 500, 600, 700) : titres
+- **DM Sans** (400, 500, 700) : body, nav, labels
 
 ### Conventions CSS
-- `border-radius: 2px` sur tous les boutons/cards (jamais de pills)
+- `border-radius: 8px` sur les boutons/cards modernes
 - Transitions : `cubic-bezier(0.16, 1, 0.3, 1)`
-- Pattern arabesque SVG en background sur sections dark
-- Grain overlay fixe sur toute la page (z-index 9999)
+- Style épuré et premium, pas de grain overlay
 
 ---
 
@@ -116,49 +116,29 @@ nawra/
 ```typescript
 // src/types/index.ts
 
-export interface Theme {
-  name: string;
-  p: string;   // couleur principale
-  s: string;   // secondaire
-  a: string;   // accent
-  l: string;   // fond clair
-}
-
 export interface Product {
   id: string;
-  cat: 'parfum' | 'makeup' | 'soin' | 'bijou';
-  brand: string;
   name: string;
+  slug: string;
+  description: string;
+  short_description: string;
   price: number;
-  themes: string[];  // noms des thèmes compatibles
-  badge?: string;
-  img?: string;
+  compare_at_price?: number;
+  images: string[];
+  category: string;
+  tags: string[];
+  stock_status: 'in_stock' | 'out_of_stock' | 'limited';
+  aliexpress_url?: string; // interne
+  features: string[];
 }
 
-export interface Basket {
-  id: string;
-  name: string;
-  theme: string;
-  size: 'S' | 'M' | 'L' | 'XL';
-  price: number;
-  tag?: string;
-  products: string[];  // ids de produits
-  img?: string;
-}
-
-export interface Size {
-  id: string;
-  label: string;
-  sub: string;
-  price: number;
-  popular?: boolean;
-  slots: number;  // nombre d'articles max
+export interface CartItem {
+  product: Product;
+  quantity: number;
 }
 
 export interface Order {
   id?: string;
-  theme: string;
-  size: string;
   products: string[];
   total: number;
   customer: {
@@ -168,28 +148,13 @@ export interface Order {
     address: string;
     city: string;
     zip: string;
+    message?: string;
   };
-  deliveryDate?: string;
-  status: 'pending' | 'paid' | 'preparing' | 'delivered';
+  status: 'pending' | 'paid' | 'preparing' | 'shipped' | 'delivered' | 'cancelled';
   stripeSessionId?: string;
   createdAt?: string;
 }
 ```
-
----
-
-## Base de données Supabase
-
-Tables à créer (voir supabase/schema.sql) :
-- `themes` — thèmes disponibles
-- `products` — catalogue produits
-- `baskets` — corbeilles prêtes
-- `sizes` — tailles disponibles
-- `orders` — commandes clients
-
-RLS (Row Level Security) :
-- `orders` : lecture/écriture publique pour création, lecture admin uniquement
-- `themes/products/baskets/sizes` : lecture publique, écriture admin uniquement
 
 ---
 
@@ -208,7 +173,7 @@ STRIPE_WEBHOOK_SECRET=
 
 # Resend (emails)
 RESEND_API_KEY=
-RESEND_FROM_EMAIL=nawra@nawra.fr
+RESEND_FROM_EMAIL=contact@velorabeauty.fr
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -223,33 +188,16 @@ ADMIN_SECRET=  # mot de passe admin simple pour MVP
 npm run dev          # Dev server localhost:3000
 npm run build        # Build production
 npm run lint         # ESLint
-npx supabase start   # Supabase local (si installé)
 ```
 
 ---
 
-## MVP — Fonctionnalités à implémenter
+## Produits (Coiffeuses)
 
-### ✅ Fait (composants React prêts)
-- [ ] Home page complète (Hero, Thèmes, Catalogue, Vidéos, Split email, FAQ, Footer)
-- [ ] Configurateur 3 steps avec sidebar preview
-- [ ] Admin panel (Corbeilles, Produits, Thèmes, Tailles)
-- [ ] Design system complet (couleurs, fonts, animations)
-
-### ❌ À faire en priorité
-1. **Connexion Supabase** — charger/sauvegarder les données depuis la BDD
-2. **Formulaire commande** — Step 3 du configurateur → nom, email, téléphone, adresse, date souhaitée
-3. **Checkout Stripe** — POST /api/checkout → Stripe Checkout Session
-4. **Webhook Stripe** — confirmer paiement → update order status
-5. **Email confirmation** — Resend → email client + email admin
-6. **Page confirmation** — /order/[id] après paiement réussi
-- Page /admin protégée par mot de passe simple (MVP)
-
-
-### 🟡 Nice to have MVP
-- WhatsApp button flottant (rapide)
-
-- SEO meta tags + Open Graph
+1. **Coiffeuse Hollywood LED** — 189€ (compare: 249€) — limited
+2. **Coiffeuse Scandinave Bois** — 159€ — in_stock
+3. **Coiffeuse VELORA Signature** — 239€ (compare: 299€) — limited
+4. **Coiffeuse Compact Rose** — 129€ — in_stock
 
 ---
 
@@ -261,14 +209,12 @@ npx supabase start   # Supabase local (si installé)
 4. **Fonts via next/font** — pas de @import Google Fonts direct
 5. **Images via next/image** — pas de balise `<img>` directe
 6. **Env vars** — jamais hardcoder les clés, toujours via `process.env`
-7. **Composants atomiques** — garder les composants `src/components/ui/` purs et réutilisables
-8. **Pattern arabesque** — le SVG est dans `src/lib/data.ts` comme constante, importer depuis là
 
 ---
 
 ## Contact / Notes
 
-- Livraison :
-- Paiement : CB uniquement via Stripe 
+- Livraison : France métropolitaine, offerte
+- Paiement : CB uniquement via Stripe
 - Admin : protégé par variable d'env `ADMIN_SECRET`
 - Vidéos : format MP4, aspect ratio 9:16, déposées dans `/public/videos/`

@@ -52,8 +52,6 @@ export async function POST(req: NextRequest) {
     if (updatedOrder) {
       const order: Order = {
         id:       updatedOrder.id,
-        theme:    updatedOrder.theme,
-        size:     updatedOrder.size,
         products: updatedOrder.products,
         total:    updatedOrder.total,
         status:   'paid',
@@ -66,7 +64,8 @@ export async function POST(req: NextRequest) {
           zip:     updatedOrder.customer_zip,
           message: updatedOrder.customer_message,
         },
-        deliveryDate: updatedOrder.delivery_date,
+        stripePaymentIntent: updatedOrder.stripe_payment_intent,
+        createdAt: updatedOrder.created_at,
       };
 
       await Promise.allSettled([

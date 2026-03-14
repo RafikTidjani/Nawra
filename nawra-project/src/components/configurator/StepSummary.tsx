@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import type { Product, Size, Theme, Order, OrderCustomer, ProductType } from '@/types';
+import type { LegacyProduct, Size, Theme, Order, OrderCustomer, ProductType } from '@/types';
 const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
   bouquet: 'Bouquet',
   panier: 'Panier de fiançailles',
@@ -15,7 +15,7 @@ interface StepSummaryProps {
   size: string;
   sizeData: Size;
   selectedItems: string[];
-  products: Product[];
+  products: LegacyProduct[];
   productType?: ProductType;
   onPrev: () => void;
 }

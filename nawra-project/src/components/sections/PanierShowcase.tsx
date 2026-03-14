@@ -21,7 +21,7 @@ export default function PanierShowcase() {
       {/* Subtle pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #C9921A 0.5px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, #C9A84C 0.5px, transparent 0)`,
           backgroundSize: '60px 60px',
         }} />
       </div>

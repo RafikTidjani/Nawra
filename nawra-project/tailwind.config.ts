@@ -9,19 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        dark:      '#0D0608',
-        dark2:     '#1A0A00',
-        cream:     '#FAF3E8',
-        gold:      '#C9921A',
-        'gold-light': '#F5C842',
-        bordeaux:  '#8B1A2F',
+        primary: '#1A1A1A',
+        secondary: '#C9A84C',
+        accent: '#F5F0E8',
+        background: '#FAFAF8',
+        text: '#1A1A1A',
+        'text-secondary': '#6B6B6B',
       },
       fontFamily: {
-        amiri:      ['var(--font-amiri)', 'Georgia', 'serif'],
-        cormorant:  ['var(--font-cormorant)', 'Georgia', 'serif'],
+        heading: ['var(--font-cormorant)', 'Georgia', 'serif'],
+        body: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
-        nawra: '2px',
+        velora: '8px',
       },
       transitionTimingFunction: {
         spring: 'cubic-bezier(0.16, 1, 0.3, 1)',
