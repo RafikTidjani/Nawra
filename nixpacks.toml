@@ -1,6 +1,9 @@
-# Nixpacks configuration
+# Nixpacks configuration for VELORA
 [variables]
-NODE_VERSION = "20"
+NIXPACKS_NODE_VERSION = "20"
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "npm"]
 
 [phases.install]
 cmds = ["cd nawra-project && npm ci"]
