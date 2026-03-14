@@ -1,11 +1,12 @@
 # Railway configuration for VELORA
-# https://docs.railway.app/reference/config-as-code
+# Le projet Next.js est dans le sous-dossier nawra-project
 
 [build]
 builder = "NIXPACKS"
+watchPatterns = ["nawra-project/**"]
 
 [deploy]
-startCommand = "npm run start"
+startCommand = "cd nawra-project && npm run start"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"

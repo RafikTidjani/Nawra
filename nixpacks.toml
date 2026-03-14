@@ -1,0 +1,12 @@
+# Nixpacks configuration
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = ["cd nawra-project && npm ci"]
+
+[phases.build]
+cmds = ["cd nawra-project && npm run build"]
+
+[start]
+cmd = "cd nawra-project && npm run start"
