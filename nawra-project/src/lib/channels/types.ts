@@ -11,7 +11,7 @@
 // ============================================
 
 export type ChannelStatus = 'active' | 'inactive' | 'pending' | 'suspended';
-export type SyncStatus = 'synced' | 'pending' | 'failed' | 'not_synced';
+export type SyncStatus = 'synced' | 'pending' | 'failed' | 'error';
 
 export interface SalesChannel {
   id: string;

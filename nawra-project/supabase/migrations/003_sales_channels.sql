@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS channel_products (
   channel_status channel_product_status DEFAULT 'draft',
 
   -- Sync state
-  sync_status sync_status DEFAULT 'not_synced',
+  sync_status sync_status DEFAULT 'pending',
   last_synced_at TIMESTAMP WITH TIME ZONE,
   last_sync_error TEXT,
 
