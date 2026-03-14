@@ -131,6 +131,10 @@ CREATE TABLE orders (
   customer_note TEXT,
   admin_note TEXT,
 
+  -- Tracking
+  tracking_number TEXT,
+  tracking_carrier TEXT,
+
   -- Timestamps
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),

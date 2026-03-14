@@ -223,6 +223,29 @@ export const FAQS = [
   },
 ];
 
+// ── CROSS-SELL SUGGESTIONS ───────────────────────────────────────────────────
+// Map product IDs to suggested product IDs for cross-selling
+export const CROSS_SELL_SUGGESTIONS: Record<string, string[]> = {
+  'hollywood-led': ['signature-velora', 'compact-rose'],
+  'scandinave-bois': ['compact-rose', 'hollywood-led'],
+  'signature-velora': ['hollywood-led', 'scandinave-bois'],
+  'compact-rose': ['scandinave-bois', 'signature-velora'],
+};
+
+export function getCrossSellProducts(productId: string): Product[] {
+  const suggestedIds = CROSS_SELL_SUGGESTIONS[productId] || [];
+  return suggestedIds
+    .map(id => PRODUCTS.find(p => p.id === id))
+    .filter((p): p is Product => p !== undefined);
+}
+
+// Get related products (excluding the current one)
+export function getRelatedProducts(productId: string, limit = 3): Product[] {
+  return PRODUCTS
+    .filter(p => p.id !== productId)
+    .slice(0, limit);
+}
+
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 export function getProductBySlug(slug: string): Product | undefined {
   return PRODUCTS.find(p => p.slug === slug);

@@ -4,48 +4,77 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase';
-import type { Order } from '@/types';
+
+interface OrderItem {
+  productId: string;
+  productName: string;
+  productPrice: number;
+  productImage: string | null;
+  quantity: number;
+}
+
+interface CustomerData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  address2?: string;
+  city: string;
+  zip: string;
+  note?: string;
+}
+
+interface CheckoutRequest {
+  customer: CustomerData;
+  items: OrderItem[];
+  total: number;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const body: { order: Order } = await req.json();
-    const { order } = body;
+    const body: CheckoutRequest = await req.json();
+    const { customer, items, total } = body;
 
-    if (!order || !order.customer?.email) {
+    // Validation
+    if (!customer?.email || !items?.length || !total) {
       return NextResponse.json({ error: 'Données manquantes' }, { status: 400 });
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
+    // Build line items for Stripe
+    const lineItems = items.map((item) => ({
+      price_data: {
+        currency: 'eur',
+        product_data: {
+          name: item.productName,
+          images: item.productImage ? [item.productImage] : [],
+        },
+        unit_amount: Math.round(item.productPrice * 100), // Stripe uses cents
+      },
+      quantity: item.quantity,
+    }));
+
     // 1. Créer la session Stripe
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
-      customer_email: order.customer.email,
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: `Commande VELORA`,
-              description: `${order.products.length} article(s)`,
-              images: [`${appUrl}/images/og.jpg`],
-            },
-            unit_amount: order.total * 100, // Stripe en centimes
-          },
-          quantity: 1,
-        },
-      ],
+      customer_email: customer.email,
+      line_items: lineItems,
       metadata: {
         brand: 'VELORA',
-        products: order.products.join(','),
-        customerName:    order.customer.name,
-        customerPhone:   order.customer.phone,
-        customerAddress: `${order.customer.address}, ${order.customer.zip} ${order.customer.city}`,
-        message:         order.customer.message || '',
+        customerFirstName: customer.firstName,
+        customerLastName: customer.lastName,
+        customerPhone: customer.phone,
+        customerAddress: customer.address,
+        customerAddress2: customer.address2 || '',
+        customerCity: customer.city,
+        customerZip: customer.zip,
+        customerNote: customer.note || '',
       },
       success_url: `${appUrl}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `${appUrl}/cart?cancelled=1`,
+      cancel_url: `${appUrl}/checkout?cancelled=1`,
       shipping_options: [
         {
           shipping_rate_data: {
@@ -70,21 +99,53 @@ export async function POST(req: NextRequest) {
       ],
     });
 
-    // 2. Sauvegarder en BDD avec status 'pending'
+    // 2. Sauvegarder la commande en BDD avec status 'pending'
     if (supabaseAdmin) {
-      await supabaseAdmin.from('orders').insert({
-        products:        order.products,
-        total:           order.total,
-        customer_name:   order.customer.name,
-        customer_email:  order.customer.email,
-        customer_phone:  order.customer.phone,
-        customer_address:order.customer.address,
-        customer_city:   order.customer.city,
-        customer_zip:    order.customer.zip,
-        customer_message:order.customer.message || null,
-        status:          'pending',
-        stripe_session_id: session.id,
-      });
+      // Insert order
+      const { data: order, error: orderError } = await supabaseAdmin
+        .from('orders')
+        .insert({
+          shipping_first_name: customer.firstName,
+          shipping_last_name: customer.lastName,
+          shipping_email: customer.email,
+          shipping_phone: customer.phone,
+          shipping_address: customer.address,
+          shipping_address2: customer.address2 || null,
+          shipping_city: customer.city,
+          shipping_zip: customer.zip,
+          subtotal: total,
+          shipping_cost: 0,
+          total: total,
+          status: 'pending',
+          customer_note: customer.note || null,
+          stripe_session_id: session.id,
+        })
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('[checkout] Order insert error:', orderError);
+        // Don't fail the checkout, just log
+      } else if (order) {
+        // Insert order items
+        const orderItems = items.map((item) => ({
+          order_id: order.id,
+          product_id: item.productId,
+          product_name: item.productName,
+          product_price: item.productPrice,
+          product_image: item.productImage,
+          quantity: item.quantity,
+          total: item.productPrice * item.quantity,
+        }));
+
+        const { error: itemsError } = await supabaseAdmin
+          .from('order_items')
+          .insert(orderItems);
+
+        if (itemsError) {
+          console.error('[checkout] Order items insert error:', itemsError);
+        }
+      }
     }
 
     return NextResponse.json({ url: session.url });

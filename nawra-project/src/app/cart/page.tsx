@@ -1,7 +1,6 @@
 // src/app/cart/page.tsx
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/hooks/useCart';
@@ -10,49 +9,6 @@ import FooterVelora from '@/components/sections/FooterVelora';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, isLoaded, clearCart } = useCart();
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-
-  const handleCheckout = async () => {
-    if (cart.items.length === 0) return;
-
-    setIsCheckingOut(true);
-
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          order: {
-            products: cart.items.map((item) => item.product.id),
-            total: cart.total,
-            customer: {
-              // For now, we'll redirect to Stripe Checkout where customer fills info
-              name: '',
-              email: '',
-              phone: '',
-              address: '',
-              city: '',
-              zip: '',
-            },
-          },
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        alert('Erreur lors du checkout. Veuillez réessayer.');
-        setIsCheckingOut(false);
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      alert('Erreur lors du checkout. Veuillez réessayer.');
-      setIsCheckingOut(false);
-    }
-  };
 
   return (
     <>
@@ -195,25 +151,18 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={handleCheckout}
-                    disabled={isCheckingOut || cart.items.length === 0}
-                    className="btn-primary w-full flex items-center justify-center gap-2"
+                  <Link
+                    href="/checkout"
+                    className="btn-secondary w-full flex items-center justify-center gap-2"
                   >
-                    {isCheckingOut ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        Passer commande
-                      </>
-                    )}
-                  </button>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Commander
+                  </Link>
 
                   <p className="text-center text-xs text-text-secondary mt-4">
-                    🔒 Paiement 100% sécurisé par Stripe
+                    Paiement 100% sécurisé par Stripe
                   </p>
 
                   {/* Trust badges */}

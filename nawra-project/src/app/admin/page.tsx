@@ -5,8 +5,9 @@ import { useState, useEffect } from 'react';
 import Logo, { LogoMark } from '@/components/ui/Logo';
 import TabProducts from '@/components/admin/TabProducts';
 import TabOrders from '@/components/admin/TabOrders';
+import TabSuppliers from '@/components/admin/TabSuppliers';
 
-type Tab = 'orders' | 'products';
+type Tab = 'orders' | 'products' | 'suppliers';
 
 interface AdminUser {
   id: string;
@@ -30,6 +31,15 @@ const TAB_CONFIG: { id: Tab; label: string; icon: JSX.Element }[] = [
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+      </svg>
+    ),
+  },
+  {
+    id: 'suppliers',
+    label: 'Fournisseurs',
+    icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
       </svg>
     ),
   },
@@ -259,6 +269,7 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {activeTab === 'orders' && <TabOrders />}
         {activeTab === 'products' && <TabProducts />}
+        {activeTab === 'suppliers' && <TabSuppliers />}
       </div>
     </div>
   );
