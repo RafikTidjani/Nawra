@@ -1,9 +1,23 @@
 // src/components/admin/TabProducts.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { PRODUCTS } from '@/lib/data';
 import type { Product } from '@/types';
+
+interface Supplier {
+  id: string;
+  code: string;
+  name: string;
+  status: string;
+}
+
+interface ProductWithSupplier extends Product {
+  supplier_id?: string;
+  supplier_product_id?: string;
+  cost_price?: number;
+  auto_fulfill?: boolean;
+}
 
 const STOCK_STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   in_stock: { label: 'En stock', color: 'text-emerald-600', bg: 'bg-emerald-50' },
@@ -12,15 +26,29 @@ const STOCK_STATUS_CONFIG: Record<string, { label: string; color: string; bg: st
 };
 
 export default function TabProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductWithSupplier[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<string | null>(null);
-  const [formData, setFormData] = useState<Partial<Product>>({});
+  const [formData, setFormData] = useState<Partial<ProductWithSupplier>>({});
   const [saving, setSaving] = useState(false);
+
+  const fetchSuppliers = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/suppliers');
+      if (res.ok) {
+        const data = await res.json();
+        setSuppliers(data.suppliers || []);
+      }
+    } catch {
+      // Suppliers table might not exist yet
+    }
+  }, []);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+    fetchSuppliers();
+  }, [fetchSuppliers]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -276,6 +304,92 @@ export default function TabProducts() {
                     </div>
                   </div>
 
+                  {/* Supplier section */}
+                  {suppliers.length > 0 && (
+                    <div className="border-t border-primary/10 pt-4 mt-4">
+                      <h4 className="font-body text-primary/60 text-sm font-medium mb-3 flex items-center gap-2">
+                        <span className="text-lg">🏭</span> Fournisseur
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                          <label className="block text-primary/50 text-xs font-body mb-2 uppercase tracking-wider">
+                            Fournisseur
+                          </label>
+                          <select
+                            className="w-full px-4 py-2.5 border border-primary/10 rounded-xl focus:outline-none focus:border-secondary/50"
+                            value={formData.supplier_id || ''}
+                            onChange={(e) => setFormData({ ...formData, supplier_id: e.target.value || undefined })}
+                          >
+                            <option value="">Aucun (manuel)</option>
+                            {suppliers.map((s) => (
+                              <option key={s.id} value={s.id}>
+                                {s.name} {s.status !== 'active' && `(${s.status})`}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-primary/50 text-xs font-body mb-2 uppercase tracking-wider">
+                            Réf. fournisseur
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-4 py-2.5 border border-primary/10 rounded-xl focus:outline-none focus:border-secondary/50 font-mono text-sm"
+                            value={formData.supplier_product_id || ''}
+                            onChange={(e) => setFormData({ ...formData, supplier_product_id: e.target.value })}
+                            placeholder="ID produit chez le fournisseur"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-primary/50 text-xs font-body mb-2 uppercase tracking-wider">
+                            Prix d&apos;achat (€)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            className="w-full px-4 py-2.5 border border-primary/10 rounded-xl focus:outline-none focus:border-secondary/50"
+                            value={formData.cost_price || ''}
+                            onChange={(e) => setFormData({ ...formData, cost_price: e.target.value ? Number(e.target.value) : undefined })}
+                            placeholder="Ex: 45.00"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-primary/50 text-xs font-body mb-2 uppercase tracking-wider">
+                            Marge
+                          </label>
+                          <div className="px-4 py-2.5 bg-primary/[0.02] border border-primary/10 rounded-xl">
+                            {formData.cost_price && formData.price ? (
+                              <div className="flex items-center justify-between">
+                                <span className={`font-heading ${(formData.price - formData.cost_price) > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                                  {(formData.price - formData.cost_price).toFixed(2)}€
+                                </span>
+                                <span className="text-primary/40 text-xs">
+                                  ({((formData.price - formData.cost_price) / formData.price * 100).toFixed(0)}%)
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-primary/30 text-sm">—</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {formData.supplier_id && formData.supplier_id !== '' && (
+                        <div className="mt-3 flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id={`auto-fulfill-${editing}`}
+                            checked={formData.auto_fulfill ?? true}
+                            onChange={(e) => setFormData({ ...formData, auto_fulfill: e.target.checked })}
+                            className="w-4 h-4 rounded border-primary/20 text-secondary focus:ring-secondary/50"
+                          />
+                          <label htmlFor={`auto-fulfill-${editing}`} className="text-primary/60 text-sm font-body">
+                            Auto-fulfillment (envoyer automatiquement au fournisseur après paiement)
+                          </label>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Actions */}
                   <div className="flex gap-2 pt-2">
                     <button
@@ -336,6 +450,20 @@ export default function TabProducts() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Supplier badge */}
+                  {product.supplier_id && (
+                    <div className="flex-shrink-0 text-center">
+                      <span className="px-2 py-1 text-xs font-body bg-blue-50 text-blue-600 rounded-lg border border-blue-200">
+                        {suppliers.find(s => s.id === product.supplier_id)?.name || 'Fournisseur'}
+                      </span>
+                      {product.cost_price && (
+                        <p className="text-xs text-emerald-600 mt-1">
+                          Marge: {(product.price - product.cost_price).toFixed(0)}€
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {/* Price & actions */}
                   <div className="flex items-center gap-6 flex-shrink-0">

@@ -90,23 +90,37 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'ID requis' }, { status: 400 });
     }
 
+    // Build update object
+    const updates: Record<string, unknown> = {
+      name: body.name,
+      description: body.description,
+      short_description: body.short_description,
+      price: body.price,
+      compare_at_price: body.compare_at_price || null,
+      images: body.images || [],
+      video: body.video || null,
+      category: body.category,
+      tags: body.tags || [],
+      stock_status: body.stock_status,
+      features: body.features || [],
+      is_active: body.is_active,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Add supplier fields if provided
+    if (body.supplier_id !== undefined) {
+      updates.supplier_id = body.supplier_id || null;
+    }
+    if (body.supplier_product_id !== undefined) {
+      updates.supplier_product_id = body.supplier_product_id || null;
+    }
+    if (body.cost_price !== undefined) {
+      updates.cost_price = body.cost_price || null;
+    }
+
     const { data, error } = await supabaseAdmin
       .from('products')
-      .update({
-        name: body.name,
-        description: body.description,
-        short_description: body.short_description,
-        price: body.price,
-        compare_at_price: body.compare_at_price || null,
-        images: body.images || [],
-        video: body.video || null,
-        category: body.category,
-        tags: body.tags || [],
-        stock_status: body.stock_status,
-        features: body.features || [],
-        is_active: body.is_active,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updates)
       .eq('id', body.id)
       .select()
       .single();
@@ -114,6 +128,30 @@ export async function PUT(req: NextRequest) {
     if (error) {
       console.error('[admin/products PUT]', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // If supplier is set, also create/update supplier_products link
+    if (body.supplier_id && body.supplier_product_id) {
+      // Try to create/update the link (table might not exist yet)
+      try {
+        await supabaseAdmin
+          .from('supplier_products')
+          .upsert({
+            product_id: body.id,
+            supplier_id: body.supplier_id,
+            supplier_product_id: body.supplier_product_id,
+            cost_price: body.cost_price || null,
+            is_primary: true,
+            auto_fulfill: body.auto_fulfill ?? true,
+            sync_status: 'synced',
+            last_synced_at: new Date().toISOString(),
+          }, {
+            onConflict: 'product_id,supplier_id',
+          });
+      } catch {
+        // Table might not exist - that's OK
+        console.log('[admin/products PUT] supplier_products table not available');
+      }
     }
 
     return NextResponse.json(data);
