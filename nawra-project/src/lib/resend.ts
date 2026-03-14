@@ -5,8 +5,8 @@ import type { Order } from '@/types';
 const apiKey = process.env.RESEND_API_KEY;
 export const resend = apiKey ? new Resend(apiKey) : null;
 
-const FROM = process.env.RESEND_FROM_EMAIL || 'contact@velorabeauty.fr';
-const ADMIN = process.env.RESEND_ADMIN_EMAIL || FROM;
+const FROM = process.env.EMAIL_FROM || 'noreply@planaura.fr';
+const ADMIN = process.env.ADMIN_EMAIL || FROM;
 
 // Email client — confirmation de commande
 export async function sendOrderConfirmation(order: Order) {
