@@ -3,7 +3,7 @@
 NIXPACKS_NODE_VERSION = "20"
 
 [phases.setup]
-nixPkgs = ["nodejs_20", "npm"]
+nixPkgs = ["nodejs_21", "npm"]
 
 [phases.install]
 cmds = ["cd nawra-project && npm ci"]
