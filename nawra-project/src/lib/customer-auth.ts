@@ -98,9 +98,30 @@ export async function signUp(email: string, password: string, firstName: string,
     if (profileError) {
       console.error('Error creating customer profile:', profileError);
     }
+
+    // Link any existing guest orders with this email to the new account
+    await linkGuestOrders(data.user.id, email);
   }
 
   return data;
+}
+
+// Link guest orders to a customer account
+async function linkGuestOrders(customerId: string, email: string) {
+  try {
+    // Find orders with this email that don't have a customer_id
+    const { error } = await supabaseClient
+      .from('orders')
+      .update({ customer_id: customerId })
+      .eq('shipping_email', email)
+      .is('customer_id', null);
+
+    if (error) {
+      console.error('Error linking guest orders:', error);
+    }
+  } catch (err) {
+    console.error('Error linking guest orders:', err);
+  }
 }
 
 // Sign in

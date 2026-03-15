@@ -8,6 +8,7 @@ import Navbar from '@/components/sections/Navbar';
 import FooterVelora from '@/components/sections/FooterVelora';
 import ProductGallery from '@/components/ProductGallery';
 import AddToCartButton from '@/components/AddToCartButton';
+import BuyNowButton from '@/components/BuyNowButton';
 import ProductCard from '@/components/ProductCard';
 
 interface ProductPageProps {
@@ -167,9 +168,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {product.short_description}
               </p>
 
-              {/* Add to cart */}
-              <div className="mb-8">
+              {/* Add to cart & Buy now */}
+              <div className="mb-8 space-y-3">
                 <AddToCartButton product={product} />
+                <BuyNowButton product={product} />
               </div>
 
               {/* Trust badges */}

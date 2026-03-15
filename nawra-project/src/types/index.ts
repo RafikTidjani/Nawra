@@ -4,6 +4,19 @@
 // Statut de stock
 export type StockStatus = 'in_stock' | 'out_of_stock' | 'limited';
 
+// Catégorie de produit
+export interface Category {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  icon?: string;
+  color?: string;
+  sortOrder: number;
+  isActive: boolean;
+  productCount?: number; // Pour l'affichage dans l'admin
+}
+
 // Produit (coiffeuse)
 export interface Product {
   id: string;

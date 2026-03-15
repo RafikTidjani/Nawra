@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { PRODUCTS } from '@/lib/data';
-import type { Product } from '@/types';
+import type { Product, Category } from '@/types';
 
 interface Supplier {
   id: string;
@@ -17,6 +17,7 @@ interface ProductWithSupplier extends Product {
   supplier_product_id?: string;
   cost_price?: number;
   auto_fulfill?: boolean;
+  category_id?: string;
 }
 
 const STOCK_STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
@@ -28,6 +29,7 @@ const STOCK_STATUS_CONFIG: Record<string, { label: string; color: string; bg: st
 export default function TabProducts() {
   const [products, setProducts] = useState<ProductWithSupplier[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<ProductWithSupplier>>({});
@@ -45,10 +47,23 @@ export default function TabProducts() {
     }
   }, []);
 
+  const fetchCategories = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/categories');
+      if (res.ok) {
+        const data = await res.json();
+        setCategories(data || []);
+      }
+    } catch {
+      // Categories table might not exist yet
+    }
+  }, []);
+
   useEffect(() => {
     fetchProducts();
     fetchSuppliers();
-  }, [fetchSuppliers]);
+    fetchCategories();
+  }, [fetchSuppliers, fetchCategories]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -236,6 +251,32 @@ export default function TabProducts() {
                         <option value="out_of_stock">Rupture</option>
                       </select>
                     </div>
+                  </div>
+
+                  {/* Category dropdown */}
+                  <div>
+                    <label className="block text-primary/50 text-xs font-body mb-2 uppercase tracking-wider">
+                      Catégorie
+                    </label>
+                    <select
+                      className="w-full px-4 py-2.5 border border-primary/10 rounded-xl focus:outline-none focus:border-secondary/50"
+                      value={formData.category_id || formData.category || ''}
+                      onChange={(e) => {
+                        const selectedCat = categories.find(c => c.id === e.target.value);
+                        setFormData({
+                          ...formData,
+                          category_id: e.target.value || undefined,
+                          category: selectedCat?.slug || formData.category,
+                        });
+                      }}
+                    >
+                      <option value="">Sélectionner une catégorie</option>
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.icon} {cat.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>

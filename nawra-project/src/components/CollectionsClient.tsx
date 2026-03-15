@@ -2,27 +2,48 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import type { Product } from '@/types';
+import type { Product, Category } from '@/types';
 import ProductCard from '@/components/ProductCard';
+import { useWishlist } from '@/hooks/useWishlist';
 
 interface CollectionsClientProps {
   products: Product[];
+  categories?: Category[];
 }
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'name';
 type PriceRange = 'all' | 'under-150' | '150-200' | 'over-200';
 
-export default function CollectionsClient({ products }: CollectionsClientProps) {
+export default function CollectionsClient({ products, categories: propCategories }: CollectionsClientProps) {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortOption>('featured');
   const [priceRange, setPriceRange] = useState<PriceRange>('all');
   const [category, setCategory] = useState<string>('all');
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
-  // Get unique categories
-  const categories = useMemo(() => {
+  // Fallback labels for legacy categories
+  const categoryLabels: Record<string, string> = {
+    'coiffeuse-led': 'Coiffeuses LED',
+    'coiffeuse-bois': 'Coiffeuses Bois',
+    'coiffeuse-compact': 'Coiffeuses Compactes',
+  };
+
+  // Use prop categories or derive from products
+  const categoryList = useMemo(() => {
+    if (propCategories && propCategories.length > 0) {
+      return propCategories;
+    }
+    // Fallback: derive from products
     const cats = new Set(products.map(p => p.category));
-    return Array.from(cats);
-  }, [products]);
+    return Array.from(cats).map(slug => ({
+      id: slug,
+      slug,
+      name: categoryLabels[slug] || slug,
+      icon: undefined as string | undefined,
+      sortOrder: 0,
+      isActive: true,
+    }));
+  }, [products, propCategories]);
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
@@ -71,12 +92,6 @@ export default function CollectionsClient({ products }: CollectionsClientProps) 
 
     return result;
   }, [products, search, sort, priceRange, category]);
-
-  const categoryLabels: Record<string, string> = {
-    'coiffeuse-led': 'Coiffeuses LED',
-    'coiffeuse-bois': 'Coiffeuses Bois',
-    'coiffeuse-compact': 'Coiffeuses Compactes',
-  };
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
@@ -132,9 +147,9 @@ export default function CollectionsClient({ products }: CollectionsClientProps) 
             className="px-4 py-2 rounded-full border border-primary/10 bg-white text-sm font-body text-primary focus:border-secondary outline-none cursor-pointer"
           >
             <option value="all">Toutes les catégories</option>
-            {categories.map(cat => (
-              <option key={cat} value={cat}>
-                {categoryLabels[cat] || cat}
+            {categoryList.map(cat => (
+              <option key={cat.slug} value={cat.slug}>
+                {cat.icon ? `${cat.icon} ` : ''}{cat.name}
               </option>
             ))}
           </select>
@@ -190,7 +205,12 @@ export default function CollectionsClient({ products }: CollectionsClientProps) 
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              isInWishlist={isInWishlist(product.id)}
+              onWishlistToggle={toggleWishlist}
+            />
           ))}
         </div>
       ) : (

@@ -2,7 +2,7 @@
 import type { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
 import { PRODUCTS } from '@/lib/data';
-import type { Product } from '@/types';
+import type { Product, Category } from '@/types';
 import Navbar from '@/components/sections/Navbar';
 import FooterVelora from '@/components/sections/FooterVelora';
 import CollectionsClient from '@/components/CollectionsClient';
@@ -33,14 +33,46 @@ async function getProducts(): Promise<Product[]> {
   }
 }
 
+async function getCategories(): Promise<Category[]> {
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true });
+
+    if (error || !data?.length) {
+      return [];
+    }
+
+    return data.map(cat => ({
+      id: cat.id,
+      slug: cat.slug,
+      name: cat.name,
+      description: cat.description,
+      icon: cat.icon,
+      color: cat.color,
+      sortOrder: cat.sort_order,
+      isActive: cat.is_active,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export default async function CollectionsPage() {
-  const products = await getProducts();
+  const [products, categories] = await Promise.all([
+    getProducts(),
+    getCategories(),
+  ]);
 
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-background pt-20">
-        <CollectionsClient products={products} />
+        <CollectionsClient products={products} categories={categories} />
       </main>
       <FooterVelora />
     </>

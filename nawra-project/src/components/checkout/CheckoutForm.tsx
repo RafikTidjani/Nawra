@@ -1,7 +1,9 @@
 // src/components/checkout/CheckoutForm.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/components/providers/AuthProvider';
+import { getCustomerAddresses, CustomerAddress } from '@/lib/customer-auth';
 
 export interface CheckoutFormData {
   firstName: string;
@@ -20,7 +22,14 @@ interface CheckoutFormProps {
   isSubmitting: boolean;
 }
 
+const STORAGE_KEY = 'velora_checkout_info';
+
 export default function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
+  const { user, profile } = useAuth();
+  const [addresses, setAddresses] = useState<CustomerAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>('');
+  const [rememberMe, setRememberMe] = useState(false);
+
   const [formData, setFormData] = useState<CheckoutFormData>({
     firstName: '',
     lastName: '',
@@ -34,6 +43,66 @@ export default function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormPro
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, string>>>({});
+
+  // Load saved info for guests or profile for logged-in users
+  useEffect(() => {
+    if (user && profile) {
+      // Pre-fill from profile
+      setFormData(prev => ({
+        ...prev,
+        firstName: profile.firstName || prev.firstName,
+        lastName: profile.lastName || prev.lastName,
+        email: user.email || prev.email,
+        phone: profile.phone || prev.phone,
+      }));
+
+      // Load saved addresses
+      getCustomerAddresses().then(addrs => {
+        setAddresses(addrs);
+        // Auto-select default address
+        const defaultAddr = addrs.find(a => a.isDefault);
+        if (defaultAddr) {
+          applyAddress(defaultAddr);
+          setSelectedAddressId(defaultAddr.id);
+        }
+      });
+    } else {
+      // Guest: try to load from localStorage
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setFormData(prev => ({ ...prev, ...parsed }));
+          setRememberMe(true);
+        }
+      } catch {
+        // Ignore
+      }
+    }
+  }, [user, profile]);
+
+  const applyAddress = (addr: CustomerAddress) => {
+    setFormData(prev => ({
+      ...prev,
+      firstName: addr.firstName || prev.firstName,
+      lastName: addr.lastName || prev.lastName,
+      address: addr.address,
+      address2: addr.address2 || '',
+      city: addr.city,
+      zip: addr.zip,
+      phone: addr.phone || prev.phone,
+    }));
+  };
+
+  const handleAddressSelect = (addressId: string) => {
+    setSelectedAddressId(addressId);
+    if (addressId === '') return;
+
+    const addr = addresses.find(a => a.id === addressId);
+    if (addr) {
+      applyAddress(addr);
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof CheckoutFormData, string>> = {};
@@ -82,12 +151,43 @@ export default function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormPro
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      // Save for guest users if remember me is checked
+      if (!user && rememberMe) {
+        try {
+          const toSave = { ...formData };
+          delete (toSave as Record<string, unknown>).note; // Don't save note
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+        } catch {
+          // Ignore
+        }
+      }
       onSubmit(formData);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Address selector for logged-in users */}
+      {user && addresses.length > 0 && (
+        <div className="bg-accent/50 rounded-xl p-4 mb-2">
+          <label className="block text-sm font-body text-primary font-medium mb-2">
+            Utiliser une adresse enregistrée
+          </label>
+          <select
+            value={selectedAddressId}
+            onChange={(e) => handleAddressSelect(e.target.value)}
+            className="w-full px-4 py-2.5 rounded-lg border border-primary/10 bg-white text-sm font-body text-primary focus:border-secondary outline-none cursor-pointer"
+          >
+            <option value="">Entrer une nouvelle adresse</option>
+            {addresses.map(addr => (
+              <option key={addr.id} value={addr.id}>
+                {addr.label} — {addr.address}, {addr.zip} {addr.city}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {/* Contact info */}
       <div>
         <h3 className="font-heading text-lg font-semibold text-primary mb-4">
@@ -263,6 +363,22 @@ export default function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormPro
           placeholder="Instructions particulières pour la livraison..."
         />
       </div>
+
+      {/* Remember me for guests */}
+      {!user && (
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="rememberMe"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="w-4 h-4 rounded border-primary/20 text-secondary focus:ring-secondary/50"
+          />
+          <label htmlFor="rememberMe" className="text-sm font-body text-primary/70">
+            Se souvenir de mes informations pour la prochaine fois
+          </label>
+        </div>
+      )}
 
       {/* Submit button */}
       <button

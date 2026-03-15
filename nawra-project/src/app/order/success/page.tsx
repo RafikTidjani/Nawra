@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { stripe } from '@/lib/stripe';
 import Navbar from '@/components/sections/Navbar';
 import FooterVelora from '@/components/sections/FooterVelora';
+import GuestAccountCreation from '@/components/GuestAccountCreation';
 
 interface PageProps {
   searchParams: Promise<{ session_id?: string }>;
@@ -190,6 +191,15 @@ export default async function OrderSuccessPage({ searchParams }: PageProps) {
               <br />
               {metadata.customerZip} {metadata.customerCity}
             </p>
+          </div>
+
+          {/* Guest account creation */}
+          <div className="mb-8">
+            <GuestAccountCreation
+              email={session.customer_email || ''}
+              firstName={metadata.customerFirstName}
+              lastName={metadata.customerLastName}
+            />
           </div>
 
           {/* Next steps */}
