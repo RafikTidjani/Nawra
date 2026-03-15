@@ -5,17 +5,25 @@
 
 :root {
   --font-cormorant: 'Cormorant Garamond';
-  --font-body: 'DM Sans';
+  --font-body: 'Nunito';
   --spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Soft Luxury Palette */
+  --color-primary: #3D3228;
+  --color-secondary: #D4A59A;
+  --color-accent: #FBF1EE;
+  --color-background: #FFFBF9;
+  --color-rose: #D4A59A;
+  --color-gold: #C8A97E;
 }
 
 /* Scrollbar fine */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(201, 168, 76, 0.4); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(212, 165, 154, 0.5); border-radius: 4px; }
 
 /* Selection */
-::selection { background: rgba(201, 168, 76, 0.3); color: #1A1A1A; }
+::selection { background: rgba(212, 165, 154, 0.35); color: #3D3228; }
 
 /* Smooth scroll */
 html { scroll-behavior: smooth; }
@@ -70,8 +78,8 @@ html { scroll-behavior: smooth; }
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(201, 168, 76, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(201, 168, 76, 0.6); }
+  0%, 100% { box-shadow: 0 0 20px rgba(212, 165, 154, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(212, 165, 154, 0.6); }
 }
 
 @keyframes gradient-shift {
@@ -207,7 +215,7 @@ html { scroll-behavior: smooth; }
 }
 .inp-dark:focus {
   @apply border-secondary/50 bg-white/10;
-  box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.1);
+  box-shadow: 0 0 0 4px rgba(212, 165, 154, 0.1);
 }
 .inp-dark::placeholder { color: rgba(245, 240, 232, 0.3); }
 
@@ -218,8 +226,8 @@ html { scroll-behavior: smooth; }
   transition: all 0.3s var(--spring);
 }
 .inp-light:focus {
-  border-color: #C9A84C;
-  box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.1);
+  border-color: #D4A59A;
+  box-shadow: 0 0 0 4px rgba(212, 165, 154, 0.1);
 }
 .inp-light::placeholder { color: #999; }
 
@@ -245,7 +253,7 @@ html { scroll-behavior: smooth; }
   position: absolute;
   bottom: 0; left: 0;
   width: 0; height: 2px;
-  background: #C9A84C;
+  background: #D4A59A;
   transition: width 0.4s var(--spring);
   border-radius: 2px;
 }
@@ -277,14 +285,14 @@ html { scroll-behavior: smooth; }
 
 .btn-secondary {
   @apply relative overflow-hidden text-primary px-8 py-4 rounded-lg font-semibold tracking-wide text-sm;
-  background: linear-gradient(135deg, #C9A84C 0%, #D4B85C 50%, #C9A84C 100%);
+  background: linear-gradient(135deg, #D4A59A 0%, #D4B85C 50%, #D4A59A 100%);
   background-size: 200% 200%;
   animation: gradient-shift 3s ease infinite;
   transition: all 0.4s var(--spring);
 }
 .btn-secondary:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 40px rgba(201, 168, 76, 0.5);
+  box-shadow: 0 10px 40px rgba(212, 165, 154, 0.5);
 }
 
 .btn-outline {
@@ -321,11 +329,11 @@ html { scroll-behavior: smooth; }
 .card-dark {
   @apply rounded-2xl;
   background: linear-gradient(145deg, #1A1A1A 0%, #2A2A2A 100%);
-  border: 1px solid rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(212, 165, 154, 0.1);
   transition: all 0.4s var(--spring);
 }
 .card-dark:hover {
-  border-color: rgba(201, 168, 76, 0.3);
+  border-color: rgba(212, 165, 154, 0.3);
   transform: translateY(-4px);
 }
 
@@ -335,9 +343,9 @@ html { scroll-behavior: smooth; }
 
 .badge-gold {
   @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide;
-  background: linear-gradient(135deg, rgba(201, 168, 76, 0.15) 0%, rgba(212, 184, 92, 0.15) 100%);
-  color: #C9A84C;
-  border: 1px solid rgba(201, 168, 76, 0.2);
+  background: linear-gradient(135deg, rgba(212, 165, 154, 0.15) 0%, rgba(212, 184, 92, 0.15) 100%);
+  color: #D4A59A;
+  border: 1px solid rgba(212, 165, 154, 0.2);
 }
 
 .badge-success {
@@ -350,8 +358,8 @@ html { scroll-behavior: smooth; }
 .badge-premium {
   @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium;
   background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
-  color: #C9A84C;
-  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: #D4A59A;
+  border: 1px solid rgba(212, 165, 154, 0.3);
 }
 
 .badge-limited {
@@ -388,7 +396,7 @@ html { scroll-behavior: smooth; }
 .divider-gold {
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+  background: linear-gradient(90deg, transparent, #D4A59A, transparent);
   margin: 0 auto;
 }
 
@@ -403,10 +411,10 @@ html { scroll-behavior: smooth; }
   content: '';
   width: 80px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.4));
+  background: linear-gradient(90deg, transparent, rgba(212, 165, 154, 0.4));
 }
 .divider-ornament::after {
-  background: linear-gradient(90deg, rgba(201, 168, 76, 0.4), transparent);
+  background: linear-gradient(90deg, rgba(212, 165, 154, 0.4), transparent);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -430,22 +438,22 @@ html { scroll-behavior: smooth; }
 .shimmer-gold {
   background: linear-gradient(
     90deg,
-    #C9A84C 0%,
+    #D4A59A 0%,
     #D4B85C 25%,
     #F5F0E8 50%,
     #D4B85C 75%,
-    #C9A84C 100%
+    #D4A59A 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shimmer 4s linear infinite;
-  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.5));
+  filter: drop-shadow(0 0 8px rgba(212, 165, 154, 0.5));
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #C9A84C 0%, #D4B85C 50%, #C9A84C 100%);
+  background: linear-gradient(135deg, #D4A59A 0%, #D4B85C 50%, #D4A59A 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -461,7 +469,7 @@ html { scroll-behavior: smooth; }
   position: absolute;
   inset: 0;
   padding: 1px;
-  background: linear-gradient(135deg, #C9A84C, #D4B85C, #C9A84C);
+  background: linear-gradient(135deg, #D4A59A, #D4B85C, #D4A59A);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -565,6 +573,6 @@ html { scroll-behavior: smooth; }
   background-position: right 12px center;
 }
 .select-styled:focus {
-  border-color: #C9A84C;
-  box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.1);
+  border-color: #D4A59A;
+  box-shadow: 0 0 0 4px rgba(212, 165, 154, 0.1);
 }

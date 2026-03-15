@@ -95,20 +95,20 @@ export default async function OrderSuccessPage({ searchParams }: PageProps) {
               {/* Outer glow */}
               <div
                 className="absolute inset-0 rounded-full animate-glow"
-                style={{ boxShadow: '0 0 30px rgba(201, 168, 76, 0.3)' }}
+                style={{ boxShadow: '0 0 30px rgba(212, 165, 154, 0.3)' }}
               />
               {/* Circle */}
               <svg className="w-24 h-24" viewBox="0 0 96 96">
                 <circle
                   cx="48" cy="48" r="44"
                   fill="none"
-                  stroke="rgba(201, 168, 76, 0.2)"
+                  stroke="rgba(212, 165, 154, 0.2)"
                   strokeWidth="2"
                 />
                 <circle
                   cx="48" cy="48" r="44"
                   fill="none"
-                  stroke="#C9A84C"
+                  stroke="#D4A59A"
                   strokeWidth="2.5"
                   className="animate-circle-grow"
                   strokeLinecap="round"
@@ -117,7 +117,7 @@ export default async function OrderSuccessPage({ searchParams }: PageProps) {
                 <path
                   d="M30 48 L42 60 L66 36"
                   fill="none"
-                  stroke="#C9A84C"
+                  stroke="#D4A59A"
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"

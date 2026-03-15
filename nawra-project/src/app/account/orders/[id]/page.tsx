@@ -56,7 +56,7 @@ export default function OrderDetailPage() {
           <title>Facture ${order?.orderNumber}</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: system-ui, sans-serif; padding: 40px; color: #1A1A1A; }
+            body { font-family: system-ui, sans-serif; padding: 40px; color: #3D3228; }
             .header { display: flex; justify-content: space-between; margin-bottom: 40px; }
             .logo { font-size: 24px; font-weight: 700; letter-spacing: 0.2em; }
             .invoice-title { font-size: 12px; color: #666; margin-top: 4px; }
@@ -64,12 +64,12 @@ export default function OrderDetailPage() {
             .info-section h3 { font-size: 12px; color: #666; margin-bottom: 8px; text-transform: uppercase; }
             .info-section p { font-size: 14px; line-height: 1.6; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-            th { text-align: left; padding: 12px 0; border-bottom: 2px solid #1A1A1A; font-size: 12px; text-transform: uppercase; color: #666; }
+            th { text-align: left; padding: 12px 0; border-bottom: 2px solid #3D3228; font-size: 12px; text-transform: uppercase; color: #666; }
             td { padding: 16px 0; border-bottom: 1px solid #eee; font-size: 14px; }
             .text-right { text-align: right; }
             .totals { margin-left: auto; width: 250px; }
             .totals-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
-            .totals-row.total { font-weight: 700; font-size: 18px; border-top: 2px solid #1A1A1A; padding-top: 16px; margin-top: 8px; }
+            .totals-row.total { font-weight: 700; font-size: 18px; border-top: 2px solid #3D3228; padding-top: 16px; margin-top: 8px; }
             .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; text-align: center; }
             @media print { body { padding: 20px; } }
           </style>

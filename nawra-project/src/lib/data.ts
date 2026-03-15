@@ -3,14 +3,16 @@
 
 import type { Product, Review } from '@/types';
 
-// ── COULEURS ─────────────────────────────────────────────────────────────────
+// ── COULEURS (Soft Luxury Palette) ───────────────────────────────────────────
 export const COLORS = {
-  primary: '#1A1A1A',
-  secondary: '#C9A84C',
-  accent: '#F5F0E8',
-  background: '#FAFAF8',
-  text: '#1A1A1A',
-  textSecondary: '#6B6B6B',
+  primary: '#3D3228',      // Warm charcoal brown
+  secondary: '#D4A59A',    // Dusty rose/blush
+  accent: '#FBF1EE',       // Blush cream
+  background: '#FFFBF9',   // Warm cream white
+  text: '#3D3228',         // Warm charcoal
+  textSecondary: '#8B7E75', // Warm taupe
+  rose: '#D4A59A',
+  gold: '#C8A97E',
 } as const;
 
 // ── TRANSITIONS ──────────────────────────────────────────────────────────────

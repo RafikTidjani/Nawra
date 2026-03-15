@@ -23,7 +23,7 @@ const SIZES: Record<LogoSize, { fontSize: number; letterSpacing: string }> = {
 
 export default function Logo({ size = 'md', variant = 'dark' }: LogoProps) {
   const { fontSize, letterSpacing } = SIZES[size];
-  const color = variant === 'light' ? '#FAFAF8' : '#1A1A1A';
+  const color = variant === 'light' ? '#FFFBF9' : '#3D3228';
 
   return (
     <span
@@ -48,7 +48,7 @@ interface LogoMarkProps {
 }
 
 export function LogoMark({ size = 32, variant = 'dark' }: LogoMarkProps) {
-  const color = variant === 'light' ? '#FAFAF8' : '#1A1A1A';
+  const color = variant === 'light' ? '#FFFBF9' : '#3D3228';
 
   return (
     <span

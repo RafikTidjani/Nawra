@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
+import { Cormorant_Garamond, Nunito } from 'next/font/google';
 import './globals.css';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import Analytics from '@/components/Analytics';
@@ -14,10 +14,10 @@ const cormorant = Cormorant_Garamond({
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
-  weight: ['400', '500', '700'],
+const nunito = Nunito({
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
-  variable: '--font-dm-sans',
+  variable: '--font-nunito',
   display: 'swap',
 });
 
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
+    <html lang="fr" className={`${cormorant.variable} ${nunito.variable}`} suppressHydrationWarning>
       <body className="font-body bg-background text-text antialiased" suppressHydrationWarning>
         <AuthProvider>
           <Analytics />

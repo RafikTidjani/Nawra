@@ -60,16 +60,16 @@ export default function Hero() {
           />
         ))}
 
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/50 to-primary/60" />
+        {/* Warm overlay for Soft Luxury aesthetic */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/75 via-primary/55 to-rose-900/50" />
 
-        {/* Colored glows - Zara aesthetic */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-rose-500/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-violet-500/8 rounded-full blur-[80px] pointer-events-none" />
+        {/* Soft glows - Rose & Gold */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-rose-300/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-secondary/15 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-gold-300/10 rounded-full blur-[80px] pointer-events-none" />
 
         {/* Bottom fade */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-primary/90 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-primary/85 to-transparent pointer-events-none" />
       </div>
 
       {/* Trust bar - top */}

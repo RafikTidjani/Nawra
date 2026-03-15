@@ -34,34 +34,34 @@ export async function POST(request: Request) {
         subject: `[Contact VELORA] ${subjectLabels[subject] || subject} - ${name}`,
         html: `
           <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;">
-            <h2 style="color:#1A1A1A;margin-bottom:24px;">Nouveau message de contact</h2>
+            <h2 style="color:#3D3228;margin-bottom:24px;">Nouveau message de contact</h2>
 
             <table style="width:100%;border-collapse:collapse;">
               <tr>
                 <td style="padding:8px 0;color:#666;width:140px;">Nom</td>
-                <td style="padding:8px 0;color:#1A1A1A;font-weight:500;">${name}</td>
+                <td style="padding:8px 0;color:#3D3228;font-weight:500;">${name}</td>
               </tr>
               <tr>
                 <td style="padding:8px 0;color:#666;">Email</td>
-                <td style="padding:8px 0;color:#1A1A1A;">
-                  <a href="mailto:${email}" style="color:#C9A84C;">${email}</a>
+                <td style="padding:8px 0;color:#3D3228;">
+                  <a href="mailto:${email}" style="color:#D4A59A;">${email}</a>
                 </td>
               </tr>
               <tr>
                 <td style="padding:8px 0;color:#666;">Sujet</td>
-                <td style="padding:8px 0;color:#1A1A1A;">${subjectLabels[subject] || subject}</td>
+                <td style="padding:8px 0;color:#3D3228;">${subjectLabels[subject] || subject}</td>
               </tr>
               ${orderNumber ? `
               <tr>
                 <td style="padding:8px 0;color:#666;">N° Commande</td>
-                <td style="padding:8px 0;color:#1A1A1A;font-family:monospace;">${orderNumber}</td>
+                <td style="padding:8px 0;color:#3D3228;font-family:monospace;">${orderNumber}</td>
               </tr>
               ` : ''}
             </table>
 
             <div style="margin-top:24px;padding:20px;background:#f9f9f9;border-radius:8px;">
               <p style="margin:0;color:#666;font-size:13px;margin-bottom:8px;">Message :</p>
-              <p style="margin:0;color:#1A1A1A;white-space:pre-wrap;">${message}</p>
+              <p style="margin:0;color:#3D3228;white-space:pre-wrap;">${message}</p>
             </div>
 
             <p style="margin-top:24px;color:#999;font-size:12px;">
