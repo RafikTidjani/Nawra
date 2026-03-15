@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
 import './globals.css';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import Analytics from '@/components/Analytics';
 
 const cormorant = Cormorant_Garamond({
   weight: ['400', '500', '600', '700'],
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body className="font-body bg-background text-text antialiased" suppressHydrationWarning>
+        <Analytics />
         {children}
         <WhatsAppButton />
       </body>
