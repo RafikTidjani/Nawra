@@ -4,10 +4,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/ui/Logo';
+import { useAuth } from '@/components/providers/AuthProvider';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -71,6 +73,25 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* Account button */}
+            {!authLoading && (
+              <Link
+                href={user ? '/account' : '/account/login'}
+                className={`
+                  hidden sm:flex h-10 w-10 items-center justify-center rounded-full transition-colors
+                  ${scrolled
+                    ? 'text-primary/70 hover:text-primary hover:bg-primary/5'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
+                  }
+                `}
+                title={user ? 'Mon compte' : 'Connexion'}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </Link>
+            )}
+
             <Link
               href="/collections"
               className={`
@@ -133,6 +154,17 @@ export default function Navbar() {
               ))}
 
               <div className="my-2 h-px bg-primary/10" />
+
+              <Link
+                href={user ? '/account' : '/account/login'}
+                onClick={() => setMobileOpen(false)}
+                className="rounded-xl px-4 py-3 text-sm font-medium text-primary/80 transition-colors hover:bg-primary/5 hover:text-primary flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                {user ? 'Mon compte' : 'Connexion'}
+              </Link>
 
               <Link
                 href="/collections"
