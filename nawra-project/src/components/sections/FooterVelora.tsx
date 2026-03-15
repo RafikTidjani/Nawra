@@ -44,6 +44,7 @@ export default function FooterVelora() {
                 { href: '/collections', label: 'Nos coiffeuses' },
                 { href: '/#reviews', label: 'Avis clients' },
                 { href: '/#faq', label: 'FAQ' },
+                { href: '/contact', label: 'Contact' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
